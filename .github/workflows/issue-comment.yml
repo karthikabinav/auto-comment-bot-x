@@ -1,15 +1,16 @@
-name: Issue Comment Bot
+name: Issue Comment Automation
+
 on:
   issues:
     types: [opened]
 
 jobs:
-  comment:
+  add-comment:
     runs-on: ubuntu-latest
     permissions:
       issues: write
     steps:
-      - name: Add comment to new issues
+      - name: Add comment
         uses: actions/github-script@v6
         with:
           script: |
