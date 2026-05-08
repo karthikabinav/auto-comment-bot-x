@@ -1,22 +1,11 @@
-name: Auto Comment on Issues
+name: Auto Comment on Issues (disabled duplicate)
 
 on:
-  issues:
-    types: [opened]
+  workflow_dispatch:
 
 jobs:
-  comment:
+  disabled:
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
     steps:
-      - name: Add comment to new issue
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body: "Thank you for your contribution!"
-            });
+      - name: Duplicate workflow disabled
+        run: echo "This duplicate workflow has been disabled. Use issue-comment.yml for automatic issue comments."
