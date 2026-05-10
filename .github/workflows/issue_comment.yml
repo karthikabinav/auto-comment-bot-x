@@ -1,0 +1,14 @@
+name: Issue Comment
+on:
+  issues:
+    types: [opened]
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Add comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh issue comment ${{ github.event.issue.number }} --repo ${{ github.repository }} --body "Thank you for your contribution!"
