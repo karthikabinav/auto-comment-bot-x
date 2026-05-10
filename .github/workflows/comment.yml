@@ -1,17 +1,9 @@
-name: Auto Comment
-
+name: Deprecated Manual Workflow
 on:
-  issues:
-    types: [opened]
+  workflow_dispatch:
 
 jobs:
-  comment:
+  noop:
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
     steps:
-      - name: Create comment
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh issue comment ${{ github.event.issue.number }} --repo ${{ github.repository }} --body "Thank you for your contribution!"
+      - run: echo "This workflow is intentionally disabled."
