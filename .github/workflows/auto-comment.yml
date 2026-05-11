@@ -1,9 +1,11 @@
-name: Auto Comment on New Issues
+name: Auto Comment Bot
+
 on:
   issues:
     types: [opened]
+
 jobs:
-  auto-comment:
+  add-comment:
     runs-on: ubuntu-latest
     permissions:
       issues: write
