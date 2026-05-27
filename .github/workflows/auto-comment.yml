@@ -1,10 +1,11 @@
-name: Auto Comment on New Issue
+name: Auto Comment on New Issues
+
 on:
   issues:
     types: [opened]
 
 jobs:
-  comment:
+  auto-comment:
     runs-on: ubuntu-latest
     permissions:
       issues: write
