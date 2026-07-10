@@ -1,4 +1,4 @@
-name: Auto comment on new issues
+name: Auto Comment on Issue
 on:
   issues:
     types: [opened]
@@ -13,5 +13,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Thank you for your contribution!"
+              body: 'Thank you for your contribution!'
             })
