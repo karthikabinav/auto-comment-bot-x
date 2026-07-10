@@ -1,4 +1,4 @@
-name: Auto Comment Bot
+name: Auto comment on new issues
 on:
   issues:
     types: [opened]
@@ -6,8 +6,7 @@ jobs:
   comment:
     runs-on: ubuntu-latest
     steps:
-      - name: Add comment
-        uses: actions/github-script@v6
+      - uses: actions/github-script@v6
         with:
           script: |
             github.rest.issues.createComment({
