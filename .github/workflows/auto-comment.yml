@@ -8,10 +8,10 @@ permissions:
   issues: write
 
 jobs:
-  auto-comment:
+  add-comment:
     runs-on: ubuntu-latest
     steps:
-      - name: Add a thank-you comment
+      - name: Add thank-you comment
         uses: actions/github-script@v7
         with:
           script: |
