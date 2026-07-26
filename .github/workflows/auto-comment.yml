@@ -1,7 +1,9 @@
 name: Auto Comment Bot
+
 on:
   issues:
     types: [opened]
+
 jobs:
   comment:
     runs-on: ubuntu-latest
