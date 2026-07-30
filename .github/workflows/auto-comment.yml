@@ -1,15 +1,16 @@
-name: Automated Comment Bot
+name: Auto Comment Bot
 on:
   issues:
     types: [opened]
+
 jobs:
   comment:
     runs-on: ubuntu-latest
     permissions:
       issues: write
     steps:
-      - name: Add thank you comment
-        uses: actions/github-script@v6
+      - name: Add comment
+        uses: actions/github-script@v7
         with:
           script: |
             github.rest.issues.createComment({
