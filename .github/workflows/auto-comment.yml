@@ -1,4 +1,4 @@
-name: Auto Comment Bot
+name: Auto Comment
 on:
   issues:
     types: [opened]
@@ -12,8 +12,8 @@ jobs:
         with:
           script: |
             github.rest.issues.createComment({
+              issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: context.issue.number,
               body: 'Thank you for your contribution!'
             })
