@@ -1,21 +1,20 @@
 name: Auto Comment Bot
-
 on:
   issues:
     types: [opened]
-
 jobs:
-  auto-comment:
+  comment:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     steps:
-      - name: Add thank you comment
+      - name: Add comment to new issue
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Thank you for your contribution!"
+              body: 'Thank you for your contribution!'
             })
