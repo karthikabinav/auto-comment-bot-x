@@ -1,1 +1,20 @@
-name: Auto Comment on New Issue\non:\n  issues:\n    types: [opened]\njobs:\n  comment:\n    runs-on: ubuntu-latest\n    permissions:\n      issues: write\n    steps:\n      - name: Add thank you comment\n        uses: actions/github-script@v7\n        with:\n          script: |\n            github.rest.issues.createComment({\n              issue_number: context.issue.number,\n              owner: context.repo.owner,\n              repo: context.repo.repo,\n              body: \u0027Thank you for your contribution!\u0027\n            })
+name: Auto Comment Bot
+on:
+  issues:
+    types: [opened]
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Add thank you comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "Thank you for your contribution!"
+            })
