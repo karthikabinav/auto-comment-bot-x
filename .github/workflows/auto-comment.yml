@@ -1,4 +1,4 @@
-name: Auto Comment
+name: Auto Comment Bot
 
 on:
   issues:
