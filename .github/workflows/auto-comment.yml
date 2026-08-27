@@ -1,4 +1,4 @@
-name: Auto Comment on New Issue
+name: Auto Comment
 on:
   issues:
     types: [opened]
@@ -8,7 +8,7 @@ jobs:
   comment:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/github-script@v7
+      - uses: actions/github-script@v6
         with:
           script: |
             github.rest.issues.createComment({
