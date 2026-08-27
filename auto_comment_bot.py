@@ -2,34 +2,32 @@
 """
 Automated Comment Bot
 
-This script demonstrates GitHub automation for adding comments to new issues.
-It can be integrated with GitHub Actions to automatically comment
-"Thank you for your contribution!" on every newly opened issue.
+A script to test GitHub automation for adding comments to issues.
+Automatically adds a comment 'Thank you for your contribution!' to any new issue created.
 """
-
 import os
 import requests
 
-GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
-REPO_OWNER = os.environ.get("REPO_OWNER", "karthikabinav")
-REPO_NAME = os.environ.get("REPO_NAME", "auto-comment-bot-x")
+GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
+REPO_OWNER = "karthikabinav"
+REPO_NAME = "auto-comment-bot-x"
+COMMENT_BODY = "Thank you for your contribution!"
 
-def add_comment(issue_number, body="Thank you for your contribution!"):
-    """Add a comment to a GitHub issue"""
+def add_comment_to_issue(issue_number, body=COMMENT_BODY):
     url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/issues/{issue_number}/comments"
     headers = {
         "Authorization": f"token {GITHUB_TOKEN}",
-        "Accept": "application/vnd.github.v3+json"
+        "Accept": "application/vnd.github.v3+json",
     }
-    data = {"body": body}
-    response = requests.post(url, json=data, headers=headers)
+    response = requests.post(url, json={"body": body}, headers=headers)
+    response.raise_for_status()
     return response.json()
 
+def handle_new_issue(issue_number):
+    # This function is triggered when a new issue is created
+    return add_comment_to_issue(issue_number, "Thank you for your contribution!")
+
 if __name__ == "__main__":
-    # Example usage for GitHub Actions
-    issue_number = os.environ.get("ISSUE_NUMBER")
-    if issue_number:
-        result = add_comment(int(issue_number))
-        print(f"Comment added to issue #{issue_number}")
-    else:
-        print("No issue number provided")
+    import sys
+    if len(sys.argv) > 1:
+        handle_new_issue(int(sys.argv[1]))
