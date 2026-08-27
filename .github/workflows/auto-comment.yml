@@ -2,11 +2,11 @@ name: Auto Comment
 on:
   issues:
     types: [opened]
-permissions:
-  issues: write
 jobs:
   comment:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     steps:
       - uses: actions/github-script@v6
         with:
