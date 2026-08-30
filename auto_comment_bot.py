@@ -1,17 +1,16 @@
-"""
-Automated Comment Bot
-Adds a comment 'Thank you for your contribution!' to any new issue created.
-"""
+"""Automated Comment Bot - adds Thank you comment to new issues."""
 import os
+# This script demonstrates GitHub automation for adding comments to issues.
+# In production, this logic runs via GitHub Actions (.github/workflows/auto-comment.yml)
+# or via webhook handling.
+COMMENT_BODY = "Thank you for your contribution!"
 
-def add_comment_to_issue(owner, repo, issue_number):
-    """Simulated function to add automated comment to a new issue."""
-    # In real GitHub Actions, this uses github.rest.issues.createComment
-    # For local testing, this represents the automation logic
-    comment_body = "Thank you for your contribution!"
-    print(f"Adding comment to {owner}/{repo}#{issue_number}: {comment_body}")
-    return comment_body
+def get_comment_for_new_issue(issue_number):
+    """Return comment payload for a new issue."""
+    return {
+        "issue_number": issue_number,
+        "body": COMMENT_BODY
+    }
 
 if __name__ == "__main__":
-    # Example usage - triggered on new issue event
-    print("Auto Comment Bot ready - will comment on new issues")
+    print(f"Bot ready. Comment message: {COMMENT_BODY}")
