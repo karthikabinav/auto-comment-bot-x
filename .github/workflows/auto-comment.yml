@@ -1,24 +1,19 @@
-name: Auto Comment on New Issues
-
+name: Auto Comment Bot
 on:
   issues:
     types: [opened]
-
 permissions:
-  contents: read
   issues: write
-
 jobs:
   comment:
     runs-on: ubuntu-latest
     steps:
-      - name: Add thank-you comment
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REPO: ${{ github.repository }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-        run: |
-          gh api \
-            --method POST \
-            "repos/${GH_REPO}/issues/${ISSUE_NUMBER}/comments" \
-            -f body="Thank you for your contribution!"
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'Thank you for your contribution!'
+            })
