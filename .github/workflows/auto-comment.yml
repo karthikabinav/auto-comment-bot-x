@@ -1,11 +1,11 @@
-name: Auto Comment
+name: Auto Comment Bot
 on:
   issues:
     types: [opened]
 permissions:
   issues: write
 jobs:
-  comment:
+  auto-comment:
     runs-on: ubuntu-latest
     steps:
       - name: Add thank you comment
@@ -16,5 +16,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Thank you for your contribution!"
+              body: 'Thank you for your contribution!'
             })
