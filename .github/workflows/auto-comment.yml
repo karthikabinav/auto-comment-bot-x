@@ -1,12 +1,9 @@
-name: Auto Comment on New Issues
-
+name: Auto Comment
 on:
   issues:
     types: [opened]
-
 permissions:
   issues: write
-
 jobs:
   auto-comment:
     runs-on: ubuntu-latest
@@ -19,5 +16,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'Thank you for your contribution!'
+              body: "Thank you for your contribution!"
             })
