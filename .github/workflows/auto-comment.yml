@@ -1,14 +1,11 @@
 name: Auto Comment Bot
-
 on:
   issues:
     types: [opened]
-
 permissions:
   issues: write
-
 jobs:
-  auto-comment:
+  comment:
     runs-on: ubuntu-latest
     steps:
       - name: Add thank you comment
