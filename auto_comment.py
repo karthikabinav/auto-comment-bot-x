@@ -1,19 +1,11 @@
-"""Script that automatically adds a comment to any new issue."""
-import os
-from github import Github
+"""Automatically adds a comment to any new issue. Used by the GitHub Actions workflow on issues: opened."""
+import os, sys, requests
 
-COMMENT_BODY = "Thank you for your contribution!"
-
-def main():
+def add_comment(owner, repo, issue_number):
     token = os.environ.get("GITHUB_TOKEN")
-    repo_name = os.environ.get("GITHUB_REPOSITORY")
-    issue_number = int(os.environ.get("ISSUE_NUMBER", "0"))
-    if not token or not repo_name or not issue_number:
-        return
-    gh = Github(token)
-    repo = gh.get_repo(repo_name)
-    issue = repo.get_issue(number=issue_number)
-    issue.create_comment(COMMENT_BODY)
+    url = f"https://api.github.com/repos/{owner}/{repo}/issues/{issue_number}/comments"
+    headers = {"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json"}
+    return requests.post(url, json={"body": "Thank you for your contribution!"}, headers=headers)
 
 if __name__ == "__main__":
-    main()
+    add_comment(os.environ["GITHUB_REPOSITORY"].split("/")[0], os.environ["GITHUB_REPOSITORY"].split("/")[1], int(sys.argv[1]))
