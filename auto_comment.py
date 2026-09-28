@@ -1,13 +1,19 @@
 """Script that automatically adds a comment to any new issue created."""
 import os
-import requests
+import sys
+from github import Github
 
-def add_comment(owner, repo, issue_number, token):
-    url = f"https://api.github.com/repos/{owner}/{repo}/issues/{issue_number}/comments"
-    headers = {"Authorization": f"token {token}", "Accept": "application/vnd.github.v3+json"}
-    data = {"body": "Thank you for your contribution!"}
-    return requests.post(url, headers=headers, json=data)
+COMMENT_BODY = "Thank you for your contribution!"
+
+def main():
+    token = os.environ.get("GITHUB_TOKEN")
+    repo_name = os.environ.get("GITHUB_REPOSITORY")
+    issue_number = int(os.environ.get("ISSUE_NUMBER", sys.argv[1] if len(sys.argv) > 1 else 0))
+    client = Github(token)
+    repo = client.get_repo(repo_name)
+    issue = repo.get_issue(number=issue_number)
+    issue.create_comment(COMMENT_BODY)
+    print(f"Added comment to issue #{issue_number}: {COMMENT_BODY}")
 
 if __name__ == "__main__":
-    token = os.environ.get("GITHUB_TOKEN")
-    print("Auto-comment bot ready: Thank you for your contribution!")
+    main()
