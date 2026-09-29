@@ -1,17 +1,19 @@
-"""Automatically add a comment to any new issue.
+import os
+import sys
 
-This script posts the comment "Thank you for your contribution!" to a new issue.
-It is used by the GitHub Actions workflow in .github/workflows/auto-comment.yml,
-which triggers on issues: opened.
-"""
+def get_comment_body():
+    return "Thank you for your contribution!"
 
-COMMENT_BODY = "Thank you for your contribution!"
-
-def add_comment(owner, repo, issue_number):
-    """Post COMMENT_BODY to the given issue (via GitHub API / actions/github-script)."""
-    # Workflow equivalent:
-    # github.rest.issues.createComment({owner, repo, issue_number, body: COMMENT_BODY})
-    return COMMENT_BODY
+def add_comment_to_issue(owner, repo, issue_number, token=None):
+    # Automation script that adds a comment to a newly created issue
+    # In a GitHub Actions workflow, this corresponds to calling the GitHub API:
+    # POST /repos/{owner}/{repo}/issues/{issue_number}/comments with body "Thank you for your contribution!"
+    print(f"Adding comment to {owner}/{repo} issue #{issue_number}: {get_comment_body()}")
+    return get_comment_body()
 
 if __name__ == "__main__":
-    print(COMMENT_BODY)
+    if len(sys.argv) == 4:
+        owner, repo, issue_number = sys.argv[1], sys.argv[2], int(sys.argv[3])
+        add_comment_to_issue(owner, repo, issue_number)
+    else:
+        print("Usage: python auto_comment.py <owner> <repo> <issue_number>")
