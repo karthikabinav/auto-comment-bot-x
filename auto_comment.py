@@ -1,19 +1,19 @@
-import os
-import sys
+"""Auto Comment Bot script.
 
-def get_comment_body():
-    return "Thank you for your contribution!"
+Adds the comment 'Thank you for your contribution!' to a new issue.
+"""
 
-def add_comment_to_issue(owner, repo, issue_number, token=None):
-    # Automation script that adds a comment to a newly created issue
-    # In a GitHub Actions workflow, this corresponds to calling the GitHub API:
-    # POST /repos/{owner}/{repo}/issues/{issue_number}/comments with body "Thank you for your contribution!"
-    print(f"Adding comment to {owner}/{repo} issue #{issue_number}: {get_comment_body()}")
-    return get_comment_body()
+COMMENT_BODY = "Thank you for your contribution!"
+
+def add_comment(owner, repo, issue_number, github_client):
+    """Add thank-you comment to the given issue."""
+    return github_client.rest.issues.create_comment(
+        owner=owner,
+        repo=repo,
+        issue_number=issue_number,
+        body=COMMENT_BODY,
+    )
 
 if __name__ == "__main__":
-    if len(sys.argv) == 4:
-        owner, repo, issue_number = sys.argv[1], sys.argv[2], int(sys.argv[3])
-        add_comment_to_issue(owner, repo, issue_number)
-    else:
-        print("Usage: python auto_comment.py <owner> <repo> <issue_number>")
+    print("Auto Comment Bot: ready to comment on new issues.")
+    print(COMMENT_BODY)
