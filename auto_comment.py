@@ -1,19 +1,16 @@
-"""Auto Comment Bot script.
+#!/usr/bin/env python3
+"""Auto-comment bot: adds a comment to a new issue."""
+import os, sys
+COMMENT = "Thank you for your contribution!"
 
-Adds the comment 'Thank you for your contribution!' to a new issue.
-"""
-
-COMMENT_BODY = "Thank you for your contribution!"
-
-def add_comment(owner, repo, issue_number, github_client):
-    """Add thank-you comment to the given issue."""
-    return github_client.rest.issues.create_comment(
-        owner=owner,
-        repo=repo,
-        issue_number=issue_number,
-        body=COMMENT_BODY,
-    )
+def add_comment(owner, repo, issue_number, token):
+    import urllib.request, json
+    url = f"https://api.github.com/repos/{owner}/{repo}/issues/{issue_number}/comments"
+    data = json.dumps({"body": COMMENT}).encode()
+    req = urllib.request.Request(url, data=data, headers={"Authorization": f"token {token}", "Accept": "application/vnd.github.v3+json", "Content-Type": "application/json"}, method="POST")
+    with urllib.request.urlopen(req) as resp:
+        return resp.read().decode()
 
 if __name__ == "__main__":
-    print("Auto Comment Bot: ready to comment on new issues.")
-    print(COMMENT_BODY)
+    print(COMMENT)
+    print("Auto-comment bot ready: Thank you for your contribution!")
