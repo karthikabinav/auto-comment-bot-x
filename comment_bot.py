@@ -1,30 +1,56 @@
-import os
-import requests
+#!/usr/bin/env python3
+"""Auto Comment Bot.
 
-def add_comment(owner, repo, issue_number, body="Thank you for your contribution!", token=None):
-    """Add a comment to a GitHub issue."""
-    token = token or os.getenv("GITHUB_TOKEN")
-    if not token:
-        raise ValueError("GitHub token required")
-    url = f"https://api.github.com/repos/{owner}/{repo}/issues/{issue_number}/comments"
-    headers = {
-        "Authorization": f"token {token}",
-        "Accept": "application/vnd.github.v3+json"
-    }
-    data = {"body": body}
-    response = requests.post(url, headers=headers, json=data)
-    response.raise_for_status()
-    return response.json()
+A learning script that automatically posts a "Thank you for your
+contribution!" comment on GitHub issues using the REST API.
+
+Configuration via environment variables:
+    GITHUB_TOKEN       - personal access token with repo scope (keep secret,
+                         e.g. load it from an *untracked* .env file)
+    GITHUB_REPOSITORY  - "owner/repo"
+
+Usage:
+    GITHUB_TOKEN=<token> GITHUB_REPOSITORY=owner/repo python3 comment_bot.py 1 2 3
+
+The production automation for this repo is .github/workflows/auto-comment.yml,
+which runs this same logic automatically whenever a new issue is opened.
+"""
+
+import json
+import os
+import sys
+import urllib.request
+
+API = "https://api.github.com"
+TOKEN = os.environ.get("GITHUB_TOKEN")
+REPOSITORY = os.environ.get("GITHUB_REPOSITORY", "karthikabinav/auto-comment-bot-x")
+MESSAGE = "Thank you for your contribution!"
+
+
+def add_comment(issue_number):
+    url = f"{API}/repos/{REPOSITORY}/issues/{issue_number}/comments"
+    payload = json.dumps({"body": MESSAGE}).encode("utf-8")
+    req = urllib.request.Request(url, data=payload, method="POST")
+    req.add_header("Authorization", f"Bearer {TOKEN}")
+    req.add_header("Accept", "application/vnd.github+json")
+    req.add_header("Content-Type", "application/json")
+    with urllib.request.urlopen(req) as resp:
+        return resp.status, json.load(resp)
+
+
+def main():
+    if not TOKEN:
+        sys.exit("error: GITHUB_TOKEN is not set (never commit it - load from a .env file in .gitignore)")
+    numbers = sys.argv[1:] or os.environ.get("ISSUE_NUMBERS", "").split(",")
+    if not numbers or numbers == [""]:
+        sys.exit("usage: comment_bot.py <issue_number> [<issue_number> ...]")
+    for number in numbers:
+        number = str(number).strip()
+        if not number:
+            continue
+        status, comment = add_comment(number)
+        print(f"issue #{number}: HTTP {status} -> comment id {comment[id]}")
+
 
 if __name__ == "__main__":
-    import sys
-    # Usage: python comment_bot.py <owner> <repo> <issue_number> [comment]
-    if len(sys.argv) < 4:
-        print("Usage: python comment_bot.py <owner> <repo> <issue_number> [comment]")
-        sys.exit(1)
-    owner = sys.argv[1]
-    repo = sys.argv[2]
-    issue_number = int(sys.argv[3])
-    comment = sys.argv[4] if len(sys.argv) > 4 else "Thank you for your contribution!"
-    result = add_comment(owner, repo, issue_number, comment)
-    print(f"Comment added: {result.get(\"html_url\")}")
+    main()
