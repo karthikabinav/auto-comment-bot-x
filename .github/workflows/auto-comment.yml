@@ -1,12 +1,14 @@
 name: Auto Comment Bot
+
 on:
   issues:
     types: [opened]
-permissions:
-  issues: write
+
 jobs:
   auto-comment:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     steps:
       - name: Comment on new issue
         uses: actions/github-script@v6
