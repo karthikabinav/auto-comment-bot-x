@@ -1,8 +1,6 @@
-# Auto Comment Bot script
-# This script is invoked by GitHub Actions when a new issue is opened
-# and adds the comment: Thank you for your contribution!
-import os
-
+"""Automation script: add a comment to a new issue."""
+import os, sys
+# This script is invoked by the GitHub Workflow for new issues.
 COMMENT = "Thank you for your contribution!"
 
 def main():
