@@ -1,15 +1,10 @@
-import os
-import sys
+# Script that automatically adds a comment to any new issue created
+# Comment: Thank you for your contribution!
 
-# Script to automatically add a comment to a new issue
-# Listens for new issue events and adds: Thank you for your contribution!
-COMMENT_BODY = "Thank you for your contribution!"
-
-def add_comment_to_issue(owner, repo, issue_number, token):
-    # This script is designed to be used with GitHub automation (e.g., via GitHub Actions)
-    # In a real workflow, it would use the GitHub API to post the comment
-    print(f"Adding comment to {owner}/{repo} issue #{issue_number}: {COMMENT_BODY}")
-    return COMMENT_BODY
+def on_new_issue(owner, repo, issue_number):
+    body = "Thank you for your contribution!"
+    # In a real workflow this would call GitHub API: POST /repos/{owner}/{repo}/issues/{issue_number}/comments with body
+    return body
 
 if __name__ == "__main__":
     print("Thank you for your contribution!")
