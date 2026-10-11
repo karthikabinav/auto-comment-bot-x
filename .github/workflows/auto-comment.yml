@@ -1,4 +1,4 @@
-name: Auto Comment
+name: Auto Comment on New Issues
 
 on:
   issues:
@@ -11,13 +11,12 @@ jobs:
   comment:
     runs-on: ubuntu-latest
     steps:
-      - name: Add thank you comment
-        uses: actions/github-script@v7
+      - uses: actions/github-script@v7
         with:
           script: |
-            await github.rest.issues.createComment({
+            github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: "Thank you for your contribution!"
-            });
+              body: 'Thank you for your contribution!'
+            })
