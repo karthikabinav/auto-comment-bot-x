@@ -1,12 +1,18 @@
-#!/usr/bin/env python3
-"""Script that automatically adds a comment to any new issue."""
+"""Script that automatically adds a comment to a new issue."""
 import os
 import sys
 
-def add_comment(owner, repo, issue_number, body="Thank you for your contribution!"):
-    # In GitHub Actions this is handled by the workflow; this function documents the comment text.
-    print(f"Adding comment to {owner}/{repo}#{issue_number}: {body}")
-    return body
+# Uses GitHub API via curl-like logic in real usage; simplified for learning.
+# When a new issue is created, this script adds: Thank you for your contribution!
+COMMENT_BODY = "Thank you for your contribution!"
+
+def add_comment(owner, repo, issue_number, token):
+    import urllib.request, json
+    url = f"https://api.github.com/repos/{owner}/{repo}/issues/{issue_number}/comments"
+    data = json.dumps({"body": COMMENT_BODY}).encode()
+    req = urllib.request.Request(url, data=data, headers={"Authorization": f"token {token}", "Accept": "application/vnd.github+json", "Content-Type": "application/json"}, method="POST")
+    with urllib.request.urlopen(req) as resp:
+        return resp.status
 
 if __name__ == "__main__":
-    print("Thank you for your contribution!")
+    print(COMMENT_BODY)
