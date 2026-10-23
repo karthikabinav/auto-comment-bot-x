@@ -1,11 +1,9 @@
 name: Auto Comment Bot
 
-# Run this workflow every time a new issue is opened in the repository
 on:
   issues:
     types: [opened]
 
-# Allow the built-in GITHUB_TOKEN to write comments on issues
 permissions:
   issues: write
 
