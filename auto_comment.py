@@ -1,9 +1,4 @@
 """Script that automatically adds a comment to a new issue."""
-import os
-import sys
-
-# Uses GitHub API via curl-like logic in real usage; simplified for learning.
-# When a new issue is created, this script adds: Thank you for your contribution!
 COMMENT_BODY = "Thank you for your contribution!"
 
 def add_comment(owner, repo, issue_number, token):
