@@ -1,4 +1,4 @@
-name: Auto Comment Bot
+name: Auto Comment
 
 on:
   issues:
@@ -15,5 +15,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: 'Thank you for your contribution!'
+              body: "Thank you for your contribution!"
             })
