@@ -1,0 +1,22 @@
+name: Auto Comment on New Issues
+
+# Runs automatically every time a new issue is opened in this repository.
+on:
+  issues:
+    types: [opened]
+
+# Least-privilege token: only allow writing issue comments.
+permissions:
+  issues: write
+
+jobs:
+  thank-contributor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add thank-you comment to the new issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue comment "$ISSUE_NUMBER" --repo "$REPO" --body "Thank you for your contribution!"
