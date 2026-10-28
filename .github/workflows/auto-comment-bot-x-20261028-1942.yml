@@ -3,12 +3,18 @@ name: Auto Comment Bot
 on:
   issues:
     types: [opened]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: Issue number to use for a manual automation test
+        required: true
+        type: string
 
 permissions:
   issues: write
 
 concurrency:
-  group: auto-comment-${{ github.repository }}-${{ github.event.issue.number }}
+  group: auto-comment-${{ github.repository }}-${{ github.event.issue.number || inputs.issue_number }}
   cancel-in-progress: false
 
 jobs:
@@ -21,7 +27,17 @@ jobs:
         with:
           script: |
             const body = "Thank you for your contribution!";
-            const issue = { ...context.repo, issue_number: context.issue.number };
+            const issueNumber = Number(
+              context.payload.issue?.number ?? context.payload.inputs?.issue_number
+            );
+            if (!Number.isSafeInteger(issueNumber) || issueNumber <= 0) {
+              throw new Error("A positive issue number is required.");
+            }
+            const issue = { ...context.repo, issue_number: issueNumber };
+            const { data: target } = await github.rest.issues.get(issue);
+            if (target.pull_request) {
+              throw new Error("This automation only comments on issues, not pull requests.");
+            }
             const comments = await github.paginate(github.rest.issues.listComments, {
               ...issue, per_page: 100
             });
