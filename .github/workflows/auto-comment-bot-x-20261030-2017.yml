@@ -1,0 +1,34 @@
+name: Auto Comment Bot
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: Issue number to use for a manual automation test
+        required: true
+        type: string
+
+permissions:
+  issues: write
+
+jobs:
+  thank-contributor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add thank-you comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = "Thank you for your contribution!";
+            const issueNumber = context.payload.issue?.number ?? Number(context.payload.inputs?.issue_number);
+            if (!Number.isSafeInteger(issueNumber) || issueNumber <= 0) {
+              throw new Error("A positive issue number is required.");
+            }
+            const issue = { ...context.repo, issue_number: issueNumber };
+            const comments = await github.paginate(github.rest.issues.listComments, { ...issue, per_page: 100 });
+            const alreadyThanked = comments.some(comment => comment.user?.type === "Bot" && comment.body === body);
+            if (!alreadyThanked) {
+              await github.rest.issues.createComment({ ...issue, body });
+            }
